@@ -15,7 +15,7 @@ void new_ListaNota(listaNota** lst)
 nodoNota* new_NodoNota(char* tema, char* contenido, char* prioridad)
 {
     nodoNota* n = (nodoNota*)malloc(sizeof(nodoNota));
-    char* p = (char*)malloc(sizeof(char) * 10);
+    char* p = (char*)malloc(sizeof(char));
     if (strcmp(prioridad, "U") == 0)
     {
         strcpy(p, "Urgente");

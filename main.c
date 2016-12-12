@@ -38,24 +38,56 @@ char* deliminardor(char* TIPOARCHIVO)
 /**
  * @param char* fileName
  */
-void leerArchivo(char* fileName)
+void leerContacto(listaContacto** lst, char* fileName)
 {
     FILE* archivo;
     archivo = fopen(fileName, "r");
-    char* texto = (char*)malloc(sizeof(char) * 256);
-    char* token = (char*)malloc(sizeof(char) * 50);
+    char* texto = (char*)malloc(sizeof(char));
+    char* token = (char*)malloc(sizeof(char));
+    nodoContacto* tmp;
+    char* nombre;
+    char* mail;
+    char* genero;
+    char* edad;
+    char* numero;
+    char* compania;
     
     if (archivo != NULL)
     {
         while (!feof(archivo))
         {
-            texto = fgets(texto, 256, archivo);
+            texto = fgets(texto, 128, archivo);
             printf("Texto a separar: %s\n", texto);
-            token = strtok(texto, deliminardor(fileName));
-            while (token != NULL)
+            
+            if (texto != NULL)
             {
-                printf("Token: %s\n", token);
-                token = strtok(NULL, deliminardor(fileName));
+                char* nombre = (char*)malloc(sizeof(char));
+                nombre = strtok(texto, " ,:;\n\r");
+                char* mail = (char*)malloc(sizeof(char));
+                mail = strtok(NULL, " ,:;\n\r");
+                char* genero = (char*)malloc(sizeof(char));
+                genero = strtok(NULL, " ,:;\n\r");
+                char* edad = (char*)malloc(sizeof(char));
+                edad = strtok(NULL, " ,:;\n\r");
+
+                tmp = insertarContacto(lst, nombre, mail, genero, edad);
+
+                int salir = 0;
+                while (salir != 1)
+                {
+                    char* numero = (char*)malloc(sizeof(char));
+                    numero = strtok(NULL, " ,:;\n\r");
+                    if (numero != NULL)
+                    {
+                        char* compania = (char*)malloc(sizeof(char));
+                        compania = strtok(NULL, " ,:;\n\r");
+
+                        insertarTelefono(&tmp, numero, compania);
+                    } else
+                    {
+                        salir = 1;
+                    }
+                }
             }
             fflush(archivo);
         }
@@ -92,11 +124,18 @@ void crearArchivo(char* fileName, char* texto)
    }
 }
 
-void gestorContacto()
+void gestorContacto(listaContacto** lst)
 {
     int opcion = 0;
-    int sub_opcion = 0;
-    char* ingreso = (char*)malloc(sizeof(char) * 15);
+    int sub_opcion;
+    
+    char* path;
+    char* nombre;
+    char* mail;
+    char* genero;
+    char* edad;
+    char* numero;
+    char* compania;
     
     do
     {
@@ -112,13 +151,60 @@ void gestorContacto()
         printf("--------------------------------\n");
         printf("Seleccione una opción: ");    
         scanf("%d", &opcion);
-        printf("--------------------------------\n\n");
+        printf("********************************\n\n");
 
-        switch(sub_opcion)
+        switch(opcion)
         {
+            case 0:
+                printf("[i] Volviendo al menú superior");
+                break;
             case 1:
                 //AGREGAR CONTACTOS
+                sub_opcion = 0;
                 
+                do
+                {
+                    nodoContacto* tmp;
+                    printf("[-- AGREGAR CONTACTOS --]\n");
+                    
+                    char* nombre = (char*)malloc(sizeof(char));
+                    printf("Nombre: "); scanf("%s", nombre);
+                    
+                    char* mail = (char*)malloc(sizeof(char));
+                    printf("Mail: "); scanf("%s", mail);
+                    
+                    char* genero = (char*)malloc(sizeof(char));
+                    printf("Genero [M][F]: "); scanf("%s", genero);
+                    
+                    char* edad = (char*)malloc(sizeof(char));
+                    printf("Edad: "); scanf("%s", edad);
+                    
+                    tmp = insertarContacto(lst, nombre, mail, genero, edad);
+                    
+                    int opcion_telefono = 0;
+                    
+                    do
+                    {
+                        printf("[-- AGREGAR TELEFONOS --]\n");
+                        
+                        char* numero = (char*)malloc(sizeof(char));
+                        printf("Numero: "); scanf("%s", numero);
+                        
+                        char* compania = (char*)malloc(sizeof(char));
+                        printf("Compania: "); scanf("%s", compania);
+                        
+                        insertarTelefono(&tmp, numero, compania);
+                        
+                        printf("\n-------------------\n"
+                                "[0] Volver\n"
+                                "[1] Seguir Ingresando telefonos\n"); scanf("%d", &opcion_telefono);
+                    } while (opcion_telefono != 0);
+                    
+                    printf("\n-------------------\n"
+                            "[0] Volver\n"
+                            "[1] Seguir Ingresando contactos\n"); scanf("%d", &sub_opcion);
+                } while (sub_opcion != 0);
+              
                 break;
             case 2:
                 //EDITAR CONTACTOS
@@ -126,16 +212,16 @@ void gestorContacto()
                 break;
             case 3:
                 //ELIMINAR CONTACTOS
-                
+                //LISTAR CONTACTOS
+                    toString_contacto((*lst));
                 break;
             case 4:
-                //LISTAR CONTACTOS
-                
-                break;
-            case 5:
                 //IMPORTAR CONTACTOS
-                printf("Direccion del archivo: [*.ac]");
-                scanf("%s", ingreso);
+                path = (char*)malloc(sizeof(char) * 10);
+                printf("Direccion del archivo [*.ac]: ");
+                scanf("%s", path);
+                
+                leerContacto(lst, path);
                 
                 break;
             default:
@@ -145,11 +231,11 @@ void gestorContacto()
     } while (opcion != 0);
 }
 
-gestorActividad()
+void gestorActividad()
 {
     int opcion = 0;
     int sub_opcion = 0;
-    char* ingreso = (char*)malloc(sizeof(char) * 15);
+    char* ingreso = (char*)malloc(sizeof(char));
     
     do
     {
@@ -165,10 +251,13 @@ gestorActividad()
         printf("--------------------------------\n");
         printf("Seleccione una opción: ");    
         scanf("%d", &opcion);
-        printf("--------------------------------\n\n");
+        printf("********************************\n\n");
 
-        switch(sub_opcion)
+        switch(opcion)
         {
+            case 0:
+                printf("[i] Volviendo al menú superior");
+                break;
             case 1:
                 //AGREGAR ACTIVIDAD
                 
@@ -183,11 +272,8 @@ gestorActividad()
                 break;
             case 4:
                 //LISTAR ACTIVIDAD
-                
-                break;
-            case 5:
                 //IMPORTAR ACTIVIDAD
-                printf("Direccion del archivo: [*.aa]");
+                printf("Direccion del archivo [*.aa]: ");
                 scanf("%s", ingreso);
                 
                 break;
@@ -198,11 +284,11 @@ gestorActividad()
     } while (opcion != 0);
 }
 
-gestorNotaRapida()
+void gestorNotaRapida()
 {
     int opcion = 0;
     int sub_opcion = 0;
-    char* ingreso = (char*)malloc(sizeof(char) * 15);
+    char* ingreso = (char*)malloc(sizeof(char));
     
     do
     {
@@ -218,10 +304,13 @@ gestorNotaRapida()
         printf("--------------------------------\n");
         printf("Seleccione una opción: ");    
         scanf("%d", &opcion);
-        printf("--------------------------------\n\n");
+        printf("********************************\n\n");
 
-        switch(sub_opcion)
+        switch(opcion)
         {
+            case 0:
+                printf("[i] Volviendo al menú superior");
+                break;
             case 1:
                 //AGREGAR NOTAS RAPIDAS
                 
@@ -236,11 +325,8 @@ gestorNotaRapida()
                 break;
             case 4:
                 //LISTAR NOTAS RAPIDAS
-                
-                break;
-            case 5:
                 //IMPORTAR NOTAS RAPIDAS
-                printf("Direccion del archivo: [*.an]");
+                printf("Direccion del archivo [*.an]: ");
                 scanf("%s", ingreso);
                 
                 break;
@@ -251,7 +337,7 @@ gestorNotaRapida()
     } while (opcion != 0);
 }
 
-gestorMensaje()
+void gestorMensaje()
 {
     int opcion = 0;
     int sub_opcion = 0;
@@ -271,10 +357,13 @@ gestorMensaje()
         printf("--------------------------------\n");
         printf("Seleccione una opción: ");    
         scanf("%d", &opcion);
-        printf("--------------------------------\n\n");
+        printf("********************************\n\n");
 
-        switch(sub_opcion)
+        switch(opcion)
         {
+            case 0:
+                printf("[i] Volviendo al menú superior");
+                break;
             case 1:
                 //AGREGAR MENSAJES
                 
@@ -289,11 +378,8 @@ gestorMensaje()
                 break;
             case 4:
                 //LISTAR MENSAJES
-                
-                break;
-            case 5:
                 //IMPORTAR MENSAJES
-                printf("Direccion del archivo: [*.am]");
+                printf("Direccion del archivo [*.am]: ");
                 scanf("%s", ingreso);
                 
                 break;
@@ -304,7 +390,7 @@ gestorMensaje()
     } while (opcion != 0);
 }
 
-gestorReporte()
+void gestorReporte()
 {
     int opcion = 0;
     int sub_opcion = 0;
@@ -324,10 +410,13 @@ gestorReporte()
         printf("--------------------------------\n");
         printf("Seleccione una opción: ");    
         scanf("%d", &opcion);
-        printf("--------------------------------\n\n");
+        printf("********************************\n\n");
 
-        switch(sub_opcion)
+        switch(opcion)
         {
+            case 0:
+                printf("[i] Volviendo al menú superior");
+                break;
             case 1:
                 //GRAFICO CONTACTOS
                 
@@ -370,14 +459,15 @@ int main(int argc, char** argv)
 
     lstContacto = (listaContacto*) malloc(sizeof(listaContacto));
     new_ListaContacto(&lstContacto);
+    
     lstActividad = (listaActividad*) malloc(sizeof(listaActividad));
     new_ListaActividad(&lstActividad);
+    
     lstNota = (listaNota*) malloc(sizeof(listaNota));
     new_ListaNota(&lstNota);
+    
     lstMensaje = (listaMensaje*) malloc(sizeof(listaMensaje));
     new_ListaMensaje(&lstMensaje);
-    
-    nodoContacto* tmp;
     
     int opcion = 0;
     do
@@ -395,15 +485,14 @@ int main(int argc, char** argv)
         printf("[5] Reportes\n\n");
         printf("--------------------------------\n");
         printf("Seleccione una opción: ");
-        
         scanf("%d", &opcion);
-        printf("--------------------------------\n\n");
+        printf("********************************\n\n");
 
         switch(opcion)
         {
             case 1:
                 //METODO CONTACTOS
-                gestorContacto();
+                gestorContacto(&lstContacto);
                 break;
             case 2:
                 //METOD ACTIVIDADES

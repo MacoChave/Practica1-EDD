@@ -189,9 +189,23 @@ void toString_contacto(listaContacto* lst)
         strcat(cadena, toString_telefono(tmp));
         tmp = tmp->siguiente;
         
-        printf("%s", cadena);
+        printf("%s\n", cadena);
         strcpy(cadena, "");
     }
+    strcat(cadena, "\nNombre: ");
+    strcat(cadena, tmp->nombre);
+    strcat(cadena, "\nMail: ");
+    strcat(cadena, tmp->mail);
+    strcat(cadena, "\nGenero: ");
+    strcat(cadena, tmp->genero);
+    strcat(cadena, "\nEdad: ");
+    strcat(cadena, tmp->edad);
+    strcat(cadena, "\nTelefono: ");
+    strcat(cadena, toString_telefono(tmp));
+    tmp = tmp->siguiente;
+
+    printf("%s\n", cadena);
+    strcpy(cadena, "");
 }
 
 char* toString_telefono(nodoContacto* ndCt)
