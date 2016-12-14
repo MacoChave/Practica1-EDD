@@ -84,6 +84,4 @@ void actividadToString(listaActividad* lst)
         printf("%s", cadena);
         strcpy(cadena, "");
     }
-    
-    return cadena;
 }

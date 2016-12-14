@@ -49,5 +49,7 @@ int buscarTelefono(nodoContacto* ndCt, char* numero);
 void toString_contacto(listaContacto* lst);
 char* toString_telefono(nodoContacto* ndCt);
 
+void graficoContacto(listaContacto* lst);
+
 #endif /* CONTACTO_H */
 

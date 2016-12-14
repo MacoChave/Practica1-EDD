@@ -172,6 +172,7 @@ int buscarTelefono(nodoContacto* ndCt, char* numero)
 
 void toString_contacto(listaContacto* lst)
 {
+    
     char* cadena = (char*)malloc(sizeof(char));
     strcpy(cadena, "");
     nodoContacto* tmp = lst->primero;
@@ -223,4 +224,66 @@ char* toString_telefono(nodoContacto* ndCt)
     }
     
     return cadena;
+}
+
+void graficoContacto(listaContacto* lst)
+{
+    int i = 0;
+    nodoContacto* tmp = lst->primero;
+    char* parte = (char*)malloc(sizeof(char));
+    FILE* archivo;
+    archivo = fopen("contacto.dot", "w");
+    
+    if (archivo != NULL)
+    {
+        strcpy(parte, "digraph contacto{\n");
+        fputs(parte, archivo);
+        while (tmp->siguiente != lst->primero)
+        {
+            sprintf(parte, "NODO%d [label=\"", i);
+            strcat(parte, tmp->nombre);
+            strcat(parte, " \\n");
+            fputs(parte, archivo);
+            
+            strcpy(parte, tmp->mail);
+            strcat(parte, " \\n");
+            fputs(parte, archivo);
+            
+            strcpy(parte, tmp->genero);
+            strcat(parte, "\"];\n");
+            fputs(parte, archivo);
+            
+            sprintf(parte, "NODO%d->", i);
+            fputs(parte, archivo);
+            sprintf(parte, "NODO%d;\n", i+1);
+            fputs(parte, archivo);
+            
+            tmp = tmp->siguiente;
+            i++;
+        }
+        sprintf(parte, "NODO%d [label=\"", i);
+        strcat(parte, tmp->nombre);
+        strcat(parte, " \\n");
+        fputs(parte, archivo);
+
+        strcpy(parte, tmp->mail);
+        strcat(parte, " \\n");
+        fputs(parte, archivo);
+
+        strcpy(parte, tmp->genero);
+        strcat(parte, "\"];\n");
+        fputs(parte, archivo);
+        strcpy(parte, "");
+        sprintf(parte, "NODO%d->NODO0;}", i);
+        fputs(parte, archivo);
+        
+        fclose(archivo);
+        
+        system("dot contacto.dot -o contacto.png -Tpng");
+        system("./contacto.png");
+    } else
+    {
+        printf("[i] No se puedo crear el archivo\n");
+    }
+    
 }

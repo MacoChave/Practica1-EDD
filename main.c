@@ -63,29 +63,32 @@ void leerContacto(listaContacto** lst, char* fileName)
             {
                 char* nombre = (char*)malloc(sizeof(char));
                 nombre = strtok(texto, " ,:;\n\r");
-                char* mail = (char*)malloc(sizeof(char));
-                mail = strtok(NULL, " ,:;\n\r");
-                char* genero = (char*)malloc(sizeof(char));
-                genero = strtok(NULL, " ,:;\n\r");
-                char* edad = (char*)malloc(sizeof(char));
-                edad = strtok(NULL, " ,:;\n\r");
-
-                tmp = insertarContacto(lst, nombre, mail, genero, edad);
-
-                int salir = 0;
-                while (salir != 1)
+                if (nombre != NULL)
                 {
-                    char* numero = (char*)malloc(sizeof(char));
-                    numero = strtok(NULL, " ,:;\n\r");
-                    if (numero != NULL)
-                    {
-                        char* compania = (char*)malloc(sizeof(char));
-                        compania = strtok(NULL, " ,:;\n\r");
+                    char* mail = (char*)malloc(sizeof(char));
+                    mail = strtok(NULL, " ,:;\n\r");
+                    char* genero = (char*)malloc(sizeof(char));
+                    genero = strtok(NULL, " ,:;\n\r");
+                    char* edad = (char*)malloc(sizeof(char));
+                    edad = strtok(NULL, " ,:;\n\r");
 
-                        insertarTelefono(&tmp, numero, compania);
-                    } else
+                    tmp = insertarContacto(lst, nombre, mail, genero, edad);
+
+                    int salir = 0;
+                    while (salir != 1)
                     {
-                        salir = 1;
+                        char* numero = (char*)malloc(sizeof(char));
+                        numero = strtok(NULL, " ,:;\n\r");
+                        if (numero != NULL)
+                        {
+                            char* compania = (char*)malloc(sizeof(char));
+                            compania = strtok(NULL, " ,:;\n\r");
+
+                            insertarTelefono(&tmp, numero, compania);
+                        } else
+                        {
+                            salir = 1;
+                        }
                     }
                 }
             }
@@ -156,7 +159,7 @@ void gestorContacto(listaContacto** lst)
         switch(opcion)
         {
             case 0:
-                printf("[i] Volviendo al menú superior");
+                printf("[i] Volviendo al menú superior\n");
                 break;
             case 1:
                 //AGREGAR CONTACTOS
@@ -231,11 +234,14 @@ void gestorContacto(listaContacto** lst)
     } while (opcion != 0);
 }
 
-void gestorActividad()
+void gestorActividad(listaActividad** lst)
 {
     int opcion = 0;
     int sub_opcion = 0;
     char* ingreso = (char*)malloc(sizeof(char));
+    char* fecha;
+    char* nombre;
+    char* descripcion;
     
     do
     {
@@ -256,11 +262,52 @@ void gestorActividad()
         switch(opcion)
         {
             case 0:
-                printf("[i] Volviendo al menú superior");
+                printf("[i] Volviendo al menú superior\n");
                 break;
             case 1:
                 //AGREGAR ACTIVIDAD
+                sub_opcion = 0;
                 
+                do
+                {
+                    nodoActividad* tmp;
+                    printf("[-- AGREGAR CONTACTOS --]\n");
+                    
+                    char* fecha = (char*)malloc(sizeof(char));
+                    char* nombre = (char*)malloc(sizeof(char));
+                    char* descripcion = (char*)malloc(sizeof(char));
+                    
+                    printf("Fecha: "); scanf("%s", fecha);
+                    
+                    printf("Nombre: "); scanf("%s", nombre);
+                    
+                    printf("Descripción: "); scanf("%s", descripcion);
+                    
+                    tmp = insertarActividad(lst, fecha, nombre, descripcion);
+                    
+//                    int opcion_telefono = 0;
+//                    
+//                    do
+//                    {
+//                        printf("[-- AGREGAR TELEFONOS --]\n");
+//                        
+//                        char* numero = (char*)malloc(sizeof(char));
+//                        printf("Numero: "); scanf("%s", numero);
+//                        
+//                        char* compania = (char*)malloc(sizeof(char));
+//                        printf("Compania: "); scanf("%s", compania);
+//                        
+//                        insertarTelefono(&tmp, numero, compania);
+//                        
+//                        printf("\n-------------------\n"
+//                                "[0] Volver\n"
+//                                "[1] Seguir Ingresando telefonos\n"); scanf("%d", &opcion_telefono);
+//                    } while (opcion_telefono != 0);
+                    
+                    printf("\n-------------------\n"
+                            "[0] Volver\n"
+                            "[1] Seguir Ingresando actividades\n"); scanf("%d", &sub_opcion);
+                } while (sub_opcion != 0);
                 break;
             case 2:
                 //EDITAR ACTIVIDAD
@@ -284,11 +331,14 @@ void gestorActividad()
     } while (opcion != 0);
 }
 
-void gestorNotaRapida()
+void gestorNotaRapida(listaNota** lst)
 {
     int opcion = 0;
     int sub_opcion = 0;
     char* ingreso = (char*)malloc(sizeof(char));
+    char* tema;
+    char* contenido;
+    char* prioridad;
     
     do
     {
@@ -309,11 +359,51 @@ void gestorNotaRapida()
         switch(opcion)
         {
             case 0:
-                printf("[i] Volviendo al menú superior");
+                printf("[i] Volviendo al menú superior\n");
                 break;
             case 1:
                 //AGREGAR NOTAS RAPIDAS
+                sub_opcion = 0;
                 
+                do
+                {
+                    printf("[-- AGREGAR CONTACTOS --]\n");
+                    
+                    char* tema = (char*)malloc(sizeof(char));
+                    char* contenido = (char*)malloc(sizeof(char));
+                    char* prioridad = (char*)malloc(sizeof(char));
+                    
+                    printf("Tema: "); scanf("%s", tema);
+                    
+                    printf("Contenido: "); scanf("%s", contenido);
+                    
+                    printf("Prioridad: "); scanf("%s", prioridad);
+                    
+                    addListaNota(lst, tema, contenido, prioridad);
+                    
+//                    int opcion_telefono = 0;
+//                    
+//                    do
+//                    {
+//                        printf("[-- AGREGAR TELEFONOS --]\n");
+//                        
+//                        char* numero = (char*)malloc(sizeof(char));
+//                        printf("Numero: "); scanf("%s", numero);
+//                        
+//                        char* compania = (char*)malloc(sizeof(char));
+//                        printf("Compania: "); scanf("%s", compania);
+//                        
+//                        insertarTelefono(&tmp, numero, compania);
+//                        
+//                        printf("\n-------------------\n"
+//                                "[0] Volver\n"
+//                                "[1] Seguir Ingresando telefonos\n"); scanf("%d", &opcion_telefono);
+//                    } while (opcion_telefono != 0);
+                    
+                    printf("\n-------------------\n"
+                            "[0] Volver\n"
+                            "[1] Seguir Ingresando notas\n"); scanf("%d", &sub_opcion);
+                } while (sub_opcion != 0);
                 break;
             case 2:
                 //EDITAR NOTAS RAPIDAS
@@ -337,7 +427,7 @@ void gestorNotaRapida()
     } while (opcion != 0);
 }
 
-void gestorMensaje()
+void gestorMensaje(listaMensaje** lst)
 {
     int opcion = 0;
     int sub_opcion = 0;
@@ -362,7 +452,7 @@ void gestorMensaje()
         switch(opcion)
         {
             case 0:
-                printf("[i] Volviendo al menú superior");
+                printf("[i] Volviendo al menú superior\n");
                 break;
             case 1:
                 //AGREGAR MENSAJES
@@ -390,7 +480,7 @@ void gestorMensaje()
     } while (opcion != 0);
 }
 
-void gestorReporte()
+void gestorReporte(listaContacto** lstC, listaActividad** lstA, listaMensaje** lstM, listaNota** lstN)
 {
     int opcion = 0;
     int sub_opcion = 0;
@@ -415,11 +505,11 @@ void gestorReporte()
         switch(opcion)
         {
             case 0:
-                printf("[i] Volviendo al menú superior");
+                printf("[i] Volviendo al menú superior\n");
                 break;
             case 1:
                 //GRAFICO CONTACTOS
-                
+                graficoContacto((*lstC));
                 break;
             case 2:
                 //GRAFICO ACTIVIDADES
@@ -496,19 +586,19 @@ int main(int argc, char** argv)
                 break;
             case 2:
                 //METOD ACTIVIDADES
-                gestorActividad();
+                gestorActividad(&lstActividad);
                 break;
             case 3:
                 //METODO NOTAS RAPIDAS
-                gestorNotaRapida();
+                gestorNotaRapida(&lstNota);
                 break;
             case 4:
                 //METODO MENSAJES
-                gestorMensaje();
+                gestorMensaje(&lstMensaje);
                 break;
             case 5:
                 //METODO REPORTE
-                gestorReporte();
+                gestorReporte(&lstContacto, &lstActividad, &lstMensaje, &lstNota);
                 break;
             default:
                 printf("Opción no reconocida\n\n");

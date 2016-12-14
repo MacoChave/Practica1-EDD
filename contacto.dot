@@ -1,0 +1,7 @@
+digraph contacto{
+NODO0 [label="a \na@mail \nM"];
+NODO0->NODO1;
+NODO1 [label="b \nb@mail \nF"];
+NODO1->NODO2;
+NODO2 [label="c \nc@mail \nM"];
+NODO2->NODO0;}
